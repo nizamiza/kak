@@ -1,0 +1,121 @@
+file_watch_support = false
+snippet_support = true
+verbosity = 2
+
+[server]
+# exit session if no requests were received during given period in seconds
+# set to 0 to disable
+timeout = 1800 # seconds = 30 minutes
+
+# This section overrides language IDs.
+# By default, kakoune-lsp uses filetypes for the IDs.
+# See https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocumentItem
+[language_ids]
+c = "c_cpp"
+cpp = "c_cpp"
+javascript = "javascriptreact"
+typescript = "typescriptreact"
+protobuf = "proto"
+sh = "shellscript"
+
+[language_server.bash-language-server]
+filetypes = ["sh"]
+roots = [".git", ".hg"]
+args = ["start"]
+command = "bash-language-server"
+
+[language_server.vscode-css-language-server]
+filetypes = ["css"]
+roots = ["package.json", ".git", ".hg"]
+command = "css-languageserver"
+args = ["--stdio"]
+
+[language_server.deno]
+filetypes = ["javascript", "typescript"]
+roots = ["deno.json", ".git", ".hg"]
+command="deno"
+args = ["lsp"]
+settings_section = "deno"
+
+[language_server.vscode-html-language-server]
+filetypes = ["html"]
+roots = ["package.json"]
+command = "html-languageserver"
+args = ["--stdio"]
+settings_section = "_"
+
+[language_server.vscode-json-language-server]
+filetypes = ["json"]
+roots = ["package.json"]
+command = "json-languageserver"
+args = ["--stdio"]
+
+[language_server.lua-language-server]
+filetypes = ["lua"]
+roots = [".git", ".hg"]
+command = "lua-language-server"
+settings_section = "Lua"
+[language_server.lua-language-server.settings.Lua]
+# See https://github.com/sumneko/vscode-lua/blob/master/setting/schema.json
+# diagnostics.enable = true
+
+[language_server.rust-analyzer]
+filetypes = ["rust"]
+roots = ["Cargo.toml"]
+command = "sh"
+args = [
+    "-c",
+    """
+        if path=$(rustup which rust-analyzer 2>/dev/null); then
+            exec "$path"
+        else
+            exec rust-analyzer
+        fi
+    """,
+]
+[language_server.rust-analyzer.experimental]
+commands.commands = ["rust-analyzer.runSingle"]
+hoverActions = true
+[language_server.rust-analyzer.settings.rust-analyzer]
+# See https://rust-analyzer.github.io/manual.html#configuration
+# cargo.features = []
+check.command = "clippy"
+
+[language_server.typescript-language-server]
+filetypes = ["javascript", "typescript"]
+roots = ["package.json", "tsconfig.json", "jsconfig.json", ".git", ".hg"]
+command = "typescript-language-server"
+args = ["--stdio"]
+settings_section = "_"
+[language_server.typescript-language-server.settings._]
+quotePreference = "double"
+typescript.format.semicolons = "insert"
+
+[language_server.biome]
+filetypes = ["typescript", "javascript"]
+roots = ["biome.json", "package.json", "tsconfig.json", "jsconfig.json", ".git", ".hg"]
+command = "biome"
+args = ["lsp-proxy"]
+
+# Semantic tokens support
+# See https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_semanticTokens
+# for the default list of tokens and modifiers.
+# However, many language servers implement their own values.
+# Make sure to check the output of `lsp-capabilities` and each server's documentation and source code as well.
+# Examples:
+# - TypeScript: https://github.com/microsoft/vscode-languageserver-node/blob/main/client/src/common/semanticTokens.ts
+# - Rust Analyzer: https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ide/src/syntax_highlighting.rs
+[semantic_tokens]
+faces = [
+    {face="documentation", token="comment", modifiers=["documentation"]},
+    {face="comment", token="comment"},
+    {face="function", token="function"},
+    {face="keyword", token="keyword"},
+    {face="module", token="namespace"},
+    {face="operator", token="operator"},
+    {face="string", token="string"},
+    {face="type", token="type"},
+    {face="default+d", token="variable", modifiers=["readonly"]},
+    {face="default+d", token="variable", modifiers=["constant"]},
+    {face="variable", token="variable"},
+]
