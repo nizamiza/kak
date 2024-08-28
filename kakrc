@@ -1,4 +1,4 @@
-colorscheme tomorrow-night
+colorscheme vivendi
 
 set-option global tabstop 2
 set-option global indentwidth 2
@@ -32,7 +32,7 @@ lsp-enable
 lsp-inlay-diagnostics-enable global
 
 map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
-map global user k :lsp-hover<ret>             -docstring 'Hover documentation'
+map global normal K :lsp-hover<ret>           -docstring 'Hover documentation'
 map global user a :lsp-code-actions<ret>      -docstring 'Code actions'
 map global user d :lsp-diagnostic-object<ret> -docstring 'Next diagnostics error'
 map global user D :lsp-diagnostics<ret>       -docstring 'All diagnostics'
@@ -46,3 +46,35 @@ hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
     remove-hooks window semantic-tokens
   }
 }
+
+# FZF
+define-command find-file %{
+  nop %sh{
+  	file="$(rg --files | fzf --tmux 80%)"
+  	echo "edit $file" > $kak_command_fifo
+	}
+}
+
+# LazyGit
+define-command lazygit %{
+  nop %sh{
+    current_path="$(tmux display-message -pF '#{pane_current_path}')"
+  	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- 'lazygit'
+  }
+}
+
+# Yazi - a file manager
+define-command yazi %{
+  nop %sh{
+    current_path="$(tmux display-message -pF '#{pane_current_path}')"
+  	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- '
+  		file_path=/tmp/kak-yazi-chosen-file.log
+  		yazi --chooser-file $file_path
+  		echo "edit $(cat $file_path)" > $kak_command_fifo
+  	'
+  }
+}
+
+map global user f :find-file<ret> -docstring "Find a file"
+map global user g :lazygit<ret>   -docstring "Open LazyGit"
+map global user o :yazi<ret>      -docstring "Open Yazi"
