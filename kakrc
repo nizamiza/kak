@@ -1,4 +1,4 @@
-colorscheme vivendi
+colorscheme kanagawa
 
 set-option global tabstop 2
 set-option global indentwidth 2
