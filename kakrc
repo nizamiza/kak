@@ -63,7 +63,7 @@ hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
 # Custom commands and integrations #
 ####################################
 
-  # FZF
+# FZF
 define-command find-file %{
   nop %sh{
   	file="$(rg --files | fzf --tmux 80%)"
