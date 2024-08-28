@@ -1,3 +1,7 @@
+####################################
+# Base configuration               #
+####################################
+
 colorscheme kanagawa
 
 set-option global tabstop 2
@@ -7,6 +11,11 @@ set-option global grepcmd 'rg --column'
 set-option global completers filename word=all
 
 add-highlighter global/ number-lines
+add-highlighter global/ column 128 default,bright-black
+
+####################################
+# Hooks                            #
+####################################
 
 # use up and down arrow keys for navigating autocomplete suggestions
 hook global InsertCompletionShow .* %{
@@ -25,7 +34,10 @@ hook global InsertCompletionShow .* %{
   }
 }
 
-# LSP config
+####################################
+# LSP configuration                #
+####################################
+
 eval %sh{kak-lsp --session $kak_session --kakoune --config ~/.config/kak/kak-lsp.toml}
 lsp-enable
 
@@ -47,7 +59,11 @@ hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
   }
 }
 
-# FZF
+####################################
+# Custom commands and integrations #
+####################################
+
+  # FZF
 define-command find-file %{
   nop %sh{
   	file="$(rg --files | fzf --tmux 80%)"
