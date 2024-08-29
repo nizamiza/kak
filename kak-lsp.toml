@@ -90,6 +90,24 @@ settings_section = "_"
 [language_server.typescript-language-server.settings._]
 quotePreference = "double"
 typescript.format.semicolons = "insert"
+# Inlay hints; TS
+typescript.inlayHints.includeInlayEnumMemberValueHints = true
+typescript.inlayHints.includeInlayFunctionLikeReturnTypeHints = true
+typescript.inlayHints.includeInlayFunctionParameterTypeHints = true
+typescript.inlayHints.includeInlayParameterNameHints = "literals"
+typescript.inlayHints.includeInlayParameterNameHintsWhenArgumentMatchesName = true
+typescript.inlayHints.includeInlayPropertyDeclarationTypeHints = true
+typescript.inlayHints.includeInlayVariableTypeHints = true
+typescript.inlayHints.includeInlayVariableTypeHintsWhenTypeMatchesName = true
+# JS
+javascript.inlayHints.includeInlayEnumMemberValueHints = true
+javascript.inlayHints.includeInlayFunctionLikeReturnTypeHints = true
+javascript.inlayHints.includeInlayFunctionParameterTypeHints = true
+javascript.inlayHints.includeInlayParameterNameHints = "literals"
+javascript.inlayHints.includeInlayParameterNameHintsWhenArgumentMatchesName = true
+javascript.inlayHints.includeInlayPropertyDeclarationTypeHints = true
+javascript.inlayHints.includeInlayVariableTypeHints = true
+javascript.inlayHints.includeInlayVariableTypeHintsWhenTypeMatchesName = true
 
 [language_server.biome]
 filetypes = ["typescript", "javascript"]

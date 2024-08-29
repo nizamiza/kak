@@ -52,16 +52,22 @@ lsp-inlay-diagnostics-enable global
 
 map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' \
 	-docstring "Select next snippet placeholder"
+
+map global user   . ':try %{lsp-inlay-hints-enable buffer} catch %{lsp-inlay-hints-disable buffer}<ret>' \
+  -docstring "Toggle inlay hints"
+
 map global normal K ':lsp-hover<ret>'             -docstring "Hover documentation"
-map global user a   ':lsp-code-actions<ret>'      -docstring "Code actions"
-map global user d   ':lsp-diagnostic-object<ret>' -docstring "Next diagnostics error"
-map global user D   ':lsp-diagnostics<ret>'       -docstring "All diagnostics"
-map global user s   ':lsp-document-symbol<ret>'   -docstring "Document symbols"
+map global user   a ':lsp-code-actions<ret>'      -docstring "Code actions"
+map global user   d ':lsp-diagnostic-object<ret>' -docstring "Next diagnostics error"
+map global user   D ':lsp-diagnostics<ret>'       -docstring "All diagnostics"
+map global user   s ':lsp-document-symbol<ret>'   -docstring "Document symbols"
+map global user   r ':lsp-rename-prompt<ret>'     -docstring "Rename symbol under the cursor"
 
 hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
   hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
   hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
   hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
+  hook window BufWritePre .* lsp-formatting-sync
   hook -once -always window WinSetOption filetype=.* %{
     remove-hooks window semantic-tokens
   }
