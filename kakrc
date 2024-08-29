@@ -17,6 +17,13 @@ add-highlighter global/ column 128 default,bright-black
 # Hooks                            #
 ####################################
 
+# keep system clipboard in sync with Kakoune
+hook global RegisterModified '"' %{
+  nop %sh{
+    printf %s "$kak_main_reg_dquote" | pbcopy
+  }
+}
+
 # use up and down arrow keys for navigating autocomplete suggestions
 hook global InsertCompletionShow .* %{
 	try %{
@@ -43,12 +50,13 @@ lsp-enable
 
 lsp-inlay-diagnostics-enable global
 
-map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
-map global normal K :lsp-hover<ret>           -docstring 'Hover documentation'
-map global user a :lsp-code-actions<ret>      -docstring 'Code actions'
-map global user d :lsp-diagnostic-object<ret> -docstring 'Next diagnostics error'
-map global user D :lsp-diagnostics<ret>       -docstring 'All diagnostics'
-map global user s :lsp-document-symbol<ret>   -docstring 'Document symbols'
+map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' \
+	-docstring "Select next snippet placeholder"
+map global normal K ':lsp-hover<ret>'             -docstring "Hover documentation"
+map global user a   ':lsp-code-actions<ret>'      -docstring "Code actions"
+map global user d   ':lsp-diagnostic-object<ret>' -docstring "Next diagnostics error"
+map global user D   ':lsp-diagnostics<ret>'       -docstring "All diagnostics"
+map global user s   ':lsp-document-symbol<ret>'   -docstring "Document symbols"
 
 hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
   hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
@@ -84,9 +92,12 @@ define-command yazi %{
   nop %sh{
     current_path="$(tmux display-message -pF '#{pane_current_path}')"
   	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- '
-  		file_path=/tmp/kak-yazi-chosen-file.log
-  		yazi --chooser-file $file_path
-  		echo "edit $(cat $file_path)" > $kak_command_fifo
+  		yazi_chooser_fifo=/tmp/yazi-chooser-file
+  		mkfifo $yazi_chooser_fifo
+  		yazi --chooser-file $yazi_chooser_fifo &
+  		cat $yazi_chooser_fifo | while read -r file; do
+    		echo "edit $file" > $kak_command_fifo
+			done
   	'
   }
 }
