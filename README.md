@@ -5,6 +5,7 @@ Kakoune is an interesting editor. [Helix](https://helix-editor.com) was heavily 
 ## Try it out!
 
 I have Kakoune setup in a specific way, which requires external dependencies to access features such as
+[LSP](https://learn.microsoft.com/en-us/visualstudio/extensibility/language-server-protocol?view=vs-2022) support,
 fuzzy finder, Git UI via LazyGit, file explorer, etc.
 
 ### Current dependencies
@@ -14,11 +15,12 @@ fuzzy finder, Git UI via LazyGit, file explorer, etc.
 - [fzf](https://github.com/junegunn/fzf)
 - [LazyGit](https://github.com/jesseduffield/lazygit)
 - [Yazi](https://github.com/sxyazi/yazi)
+- [Kakoune LSP](https://github.com/kakoune-lsp/kakoune-lsp)
 
 All of these can be installed via [Homebrew](https://brew.sh):
 
 ```sh
-brew install ripgrep tmux fzf lazygit yazi
+brew install ripgrep tmux fzf lazygit yazi kakoune-lsp/kakoune-lsp/kakoune-lsp
 ```
 
 ### Installing the config
