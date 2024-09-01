@@ -7,7 +7,7 @@ colorscheme kanagawa
 set-option global tabstop 2
 set-option global indentwidth 2
 set-option global scrolloff 5,1
-set-option global grepcmd 'rg --column'
+set-option global grepcmd 'rg -Hn --no-heading'
 set-option global completers filename word=all
 
 add-highlighter global/ number-lines
@@ -63,7 +63,7 @@ map global user   D ':lsp-diagnostics<ret>'       -docstring "All diagnostics"
 map global user   s ':lsp-document-symbol<ret>'   -docstring "Document symbols"
 map global user   r ':lsp-rename-prompt<ret>'     -docstring "Rename symbol under the cursor"
 
-hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
+hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust|ruby|eruby) %{
   hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
   hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
   hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
@@ -78,7 +78,7 @@ hook global WinSetOption filetype=(typescript|javascript|css|html|json|rust) %{
 ####################################
 
 # FZF
-define-command find-file %{
+define-command -docstring "Search for a file using fzf" find-file %{
   nop %sh{
   	file="$(rg --files | fzf --tmux 80%)"
   	echo "edit $file" > $kak_command_fifo
@@ -86,24 +86,20 @@ define-command find-file %{
 }
 
 # LazyGit
-define-command lazygit %{
+define-command -docstring "Open LazyGit" lazygit %{
   nop %sh{
     current_path="$(tmux display-message -pF '#{pane_current_path}')"
   	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- 'lazygit'
   }
 }
 
-# Yazi - a file manager
-define-command yazi %{
+# Yazi - a file explorer
+define-command -docstring "Open Yazi file explorer" yazi %{
   nop %sh{
     current_path="$(tmux display-message -pF '#{pane_current_path}')"
   	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- '
-  		yazi_chooser_fifo=/tmp/yazi-chooser-file
-  		mkfifo $yazi_chooser_fifo
-  		yazi --chooser-file $yazi_chooser_fifo &
-  		cat $yazi_chooser_fifo | while read -r file; do
-    		echo "edit $file" > $kak_command_fifo
-			done
+  		yazi --chooser-file /tmp/yazi-chooser-file.txt
+    	echo "edit $(tail -n 1 /tmp/yazi-chooser-file.txt)" > $kak_command_fifo
   	'
   }
 }

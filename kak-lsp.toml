@@ -115,6 +115,11 @@ roots = ["biome.json", "package.json", "tsconfig.json", "jsconfig.json", ".git",
 command = "biome"
 args = ["lsp-proxy"]
 
+[language_server.ruby-lsp]
+filetypes = ["ruby", "eruby"]
+roots = ["Gemfile"]
+command = "ruby-lsp"
+
 # Semantic tokens support
 # See https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_semanticTokens
 # for the default list of tokens and modifiers.
