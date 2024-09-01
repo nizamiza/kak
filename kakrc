@@ -5,6 +5,7 @@
 colorscheme kanagawa
 
 set-option global tabstop 2
+set-option global aligntab false
 set-option global indentwidth 2
 set-option global scrolloff 5,1
 set-option global grepcmd 'rg -Hn --no-heading'
@@ -12,6 +13,7 @@ set-option global completers filename word=all
 
 add-highlighter global/ number-lines
 add-highlighter global/ column 128 default,bright-black
+add-highlighter global/ show-whitespaces -indent "▏" -spc " " -tab "→" -lf " "
 
 ####################################
 # Hooks                            #
@@ -26,8 +28,8 @@ hook global RegisterModified '"' %{
 
 # use up and down arrow keys for navigating autocomplete suggestions
 hook global InsertCompletionShow .* %{
-	try %{
-  	# this command temporarily removes cursors preceded by whitespace;
+  try %{
+    # this command temporarily removes cursors preceded by whitespace;
     # if there are no cursors left, it raises an error, does not
     # continue to execute the mapping commands, and the error is eaten
     # by the `try` command so no warning appears.
@@ -51,7 +53,7 @@ lsp-enable
 lsp-inlay-diagnostics-enable global
 
 map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' \
-	-docstring "Select next snippet placeholder"
+  -docstring "Select next snippet placeholder"
 
 map global user   . ':try %{lsp-inlay-hints-enable buffer} catch %{lsp-inlay-hints-disable buffer}<ret>' \
   -docstring "Toggle inlay hints"
@@ -89,7 +91,7 @@ define-command -docstring "Search for a file using fzf" find-file %{
 define-command -docstring "Open LazyGit" lazygit %{
   nop %sh{
     current_path="$(tmux display-message -pF '#{pane_current_path}')"
-  	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- 'lazygit'
+    tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- 'lazygit'
   }
 }
 
@@ -97,10 +99,10 @@ define-command -docstring "Open LazyGit" lazygit %{
 define-command -docstring "Open Yazi file explorer" yazi %{
   nop %sh{
     current_path="$(tmux display-message -pF '#{pane_current_path}')"
-  	tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- '
-  		yazi --chooser-file /tmp/yazi-chooser-file.txt
-    	echo "edit $(tail -n 1 /tmp/yazi-chooser-file.txt)" > $kak_command_fifo
-  	'
+    tmux popup -E -h 95% -w 95% -e kak_command_fifo=$kak_command_fifo -d "$current_path" -- '
+      yazi --chooser-file /tmp/yazi-chooser-file.txt
+      echo "edit $(tail -n 1 /tmp/yazi-chooser-file.txt)" > $kak_command_fifo
+    '
   }
 }
 
